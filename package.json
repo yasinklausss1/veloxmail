@@ -1,0 +1,20 @@
+{
+  "name": "veloxmail",
+  "version": "1.0.0",
+  "description": "Ultraschnelle, werbefreie temporäre E-Mail Web-App basierend auf mail.tm API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "tempmail",
+    "mail-tm",
+    "disposable-email"
+  ],
+  "author": "Antigravity",
+  "license": "MIT",
+  "dependencies": {
+    "https-proxy-agent": "^9.1.0",
+    "socks-proxy-agent": "^10.1.0"
+  }
+}
