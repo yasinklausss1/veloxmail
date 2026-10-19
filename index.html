@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VeloxMail — Minimalistischer High-Speed Wegwerf-E-Mail-Dienst</title>
+  <meta name="description" content="Schneller, werbefreier und minimalistischer temporärer E-Mail-Dienst. Sofortige E-Mail-Adresse, Echtzeit-Posteingang, Proxy-Rotation und volle Privatsphäre.">
+
+  <!-- World-Class Typography: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236366f1'><path d='M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z'/><path d='M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z'/></svg>">
+</head>
+<body>
+
+  <!-- Blurred Ambient Geometric Background (Responsive on all devices) -->
+  <div class="ambient-bg" aria-hidden="true">
+    <div class="ambient-bg-image"></div>
+    <div class="ambient-bg-overlay"></div>
+  </div>
+
+  <!-- Top Navigation Bar (Clean & Compact) -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-group">
+        <span class="brand-name">Velox<span class="accent-dot">.</span>mail</span>
+      </div>
+
+      <!-- Header Center: Connection & Proxy Engine Pills -->
+      <div class="header-center">
+        <!-- Live status badge -->
+        <div class="status-badge" id="statusBadge" title="Verbindungsstatus mit mail.tm">
+          <span class="status-pulse" id="statusPulse"></span>
+          <span class="status-text" id="statusText">Bereit</span>
+        </div>
+
+        <!-- Mode & Proxy Rotation Badge (Clickable Toggle: Turbo vs. Proxy) -->
+        <div class="proxy-status-badge" id="proxyStatusBadge" title="Klicken für Modus-Wechsel: ⚡ Turbo (0.2s) oder 🛡️ Proxy-Rotation">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="badge-icon">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+          </svg>
+          <span class="proxy-status-dot" id="proxyStatusDot"></span>
+          <span class="proxy-status-text" id="proxyStatusText">Proxy lädt...</span>
+        </div>
+      </div>
+
+      <!-- Header Tools (History & Theme) -->
+      <div class="header-actions">
+        <!-- Account history switcher -->
+        <button class="tool-btn" id="historyModalBtn" title="Frühere Adressen anzeigen & wechseln" aria-label="Adressverlauf">
+          <svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </button>
+
+        <!-- Theme toggle (Dark / Light) -->
+        <button class="tool-btn" id="themeToggleBtn" title="Design wechseln (Dunkel/Hell)" aria-label="Theme wechseln">
+          <svg class="tool-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="12" r="4" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v2m0 16v2m10-10h-2M4 12H2m15.07-7.07l-1.41 1.41M6.34 17.66l-1.41 1.41m12.14 0l-1.41-1.41M6.34 6.34L4.93 4.93" />
+          </svg>
+          <svg class="tool-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Fast-Use Workspace -->
+  <main class="main-layout">
+
+    <!-- Hero Card: Instant Temporary Address Command Bar -->
+    <section class="hero-email-section">
+      <div class="command-card">
+        <div class="command-primary-row">
+          <!-- Click-to-copy Address Input Field -->
+          <div class="address-box" id="emailInputWrapper" role="button" tabindex="0" title="Klicken zum Kopieren (Taste: C)">
+            <svg class="address-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <input type="text" id="emailAddressInput" class="address-input" readonly value="Lade Adresse..." aria-label="Deine temporäre E-Mail-Adresse">
+            <span class="copy-badge-inline" id="copyBadgeInline">Kopieren</span>
+          </div>
+
+          <!-- Password Display Pill -->
+          <div class="password-box" id="passwordPillWrapper" title="Klicken zum Kopieren / Anzeigen">
+            <div class="password-label-group">
+              <svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0110 0v4" />
+              </svg>
+              <span class="password-tag">Passwort</span>
+            </div>
+            <input type="password" id="currentPasswordInput" class="password-input mono" readonly value="••••••••••••" aria-label="Passwort">
+            <div class="password-actions">
+              <button class="micro-icon-btn" id="togglePasswordVisibilityBtn" type="button" title="Passwort anzeigen/verbergen">
+                <svg class="micro-icon" id="iconEyeShow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+                <svg class="micro-icon hidden" id="iconEyeHide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24M1 1l22 22" />
+                </svg>
+              </button>
+              <button class="micro-icon-btn" id="copyPasswordBtn" type="button" title="Passwort in Zwischenablage kopieren">
+                <svg class="micro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                  <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Control Bar (All Fast-Use Tools in One Sleek Row) -->
+        <div class="command-toolbar">
+          <div class="toolbar-left">
+            <button class="btn btn-primary" id="copyAddressBtn" title="In Zwischenablage kopieren (Taste: C)">
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+              </svg>
+              <span>Kopieren</span>
+              <kbd class="key-hint">C</kbd>
+            </button>
+
+            <button class="btn btn-action" id="randomNewBtn" title="Zufällige neue Adresse erzeugen (Taste: N)">
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              <span>Neu</span>
+              <kbd class="key-hint">N</kbd>
+            </button>
+
+            <button class="btn btn-action" id="customAddressBtn" title="Eigene Wunsch-Adresse wählen">
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              <span>Anpassen</span>
+            </button>
+          </div>
+
+          <div class="toolbar-right">
+            <!-- Refresh Button with Countdown Ring -->
+            <button class="btn btn-action" id="refreshBtn" title="Posteingang jetzt abfragen (Taste: R)">
+              <svg class="btn-icon" id="refreshBtnIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              <span>Abrufen</span>
+              <kbd class="key-hint">R</kbd>
+            </button>
+
+            <!-- Auto Refresh Countdown Pill -->
+            <div class="auto-refresh-pill" id="autoRefreshPill" title="Klicken für Sofort-Aktualisierung">
+              <svg class="timer-ring-svg" viewBox="0 0 36 36">
+                <path class="timer-ring-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                <path class="timer-ring-progress" id="timerRingProgress" stroke-dasharray="100, 100" stroke-dashoffset="0" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              </svg>
+              <span class="timer-text" id="refreshTimerText">5s</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Workspace: Split View for Inbox List & Reader -->
+    <section class="inbox-workspace" id="inboxWorkspace">
+
+      <!-- Left Column: Fast Message Stream -->
+      <aside class="inbox-panel" id="inboxPanel">
+        <!-- Search & Filter Header -->
+        <div class="panel-toolbar">
+          <div class="search-box">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <circle cx="11" cy="11" r="8" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35" />
+            </svg>
+            <input type="text" id="searchInput" placeholder="E-Mails filtern... (Taste: S)" class="search-input" aria-label="E-Mails suchen">
+            <button class="search-clear-btn hidden" id="searchClearBtn" title="Suche leeren">&times;</button>
+          </div>
+
+          <!-- Filter Tags -->
+          <div class="inbox-filter-row">
+            <div class="filter-pills">
+              <button class="filter-pill active" data-filter="all">Alle (<span id="countAll">0</span>)</button>
+              <button class="filter-pill" data-filter="unread">Ungelesen (<span id="countUnread">0</span>)</button>
+              <button class="filter-pill" data-filter="attachments">Anhänge (<span id="countAttachments">0</span>)</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scrollable Message List Container -->
+        <div class="message-list-container" id="messageListContainer">
+          <!-- Minimalist Professional Empty State -->
+          <div class="empty-inbox-state" id="emptyInboxState">
+            <div class="empty-icon-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-inbox-icon">
+                <rect x="2" y="4" width="20" height="16" rx="2" />
+                <path d="M22 7l-8.97 5.7a1.94 1.94 0 01-2.06 0L2 7" />
+              </svg>
+              <span class="live-dot-ping"></span>
+            </div>
+            <h3 class="empty-title">Posteingang empfangsbereit</h3>
+            <p class="empty-desc">Sende eine E-Mail an deine temporäre Adresse. Eingehende Nachrichten erscheinen hier sofort.</p>
+          </div>
+
+          <div class="messages-stack" id="messagesStack"></div>
+        </div>
+      </aside>
+
+      <!-- Right Column: Clean Email Reader -->
+      <section class="reader-panel" id="readerPanel">
+        <!-- Placeholder when no email selected -->
+        <div class="reader-placeholder" id="readerPlaceholder">
+          <div class="placeholder-art">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+            </svg>
+          </div>
+          <h3>Keine Nachricht ausgewählt</h3>
+          <p>Wähle links eine E-Mail aus, um den Inhalt hier im Detail zu lesen.</p>
+        </div>
+
+        <!-- Full Content Container -->
+        <div class="reader-content hidden" id="readerContent">
+          <!-- Reader Action Toolbar -->
+          <div class="reader-top-bar">
+            <button class="reader-back-btn" id="readerBackBtn" title="Zurück zur Liste">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5m7 7l-7-7 7-7" />
+              </svg>
+              <span>Zurück</span>
+            </button>
+
+            <div class="reader-actions-toolbar">
+              <button class="action-btn" id="readerToggleSeenBtn" title="Gelesen/Ungelesen umschalten">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+                <span id="readerSeenText">Ungelesen</span>
+              </button>
+
+              <button class="action-btn" id="readerRawBtn" title="Quelltext & Header anzeigen">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                </svg>
+                <span>Quelltext</span>
+              </button>
+
+              <button class="action-btn" id="readerPrintBtn" title="Nachricht drucken">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2m-12 0v4h12v-4" />
+                </svg>
+                <span>Drucken</span>
+              </button>
+
+              <button class="action-btn text-danger" id="readerDeleteBtn" title="E-Mail löschen (Taste: Entf)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                <span>Löschen</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Email Meta Header -->
+          <div class="reader-meta-header">
+            <h1 class="reader-subject" id="readerSubject">Betreff</h1>
+
+            <div class="reader-sender-row">
+              <div class="sender-avatar" id="readerAvatar">M</div>
+              <div class="sender-info">
+                <div class="sender-name-line">
+                  <span class="sender-name" id="readerFromName">Absender</span>
+                  <span class="sender-address" id="readerFromAddress">&lt;sender@domain.com&gt;</span>
+                </div>
+                <div class="recipient-line">
+                  <span>An:</span>
+                  <span id="readerToAddress">mich@domain.com</span>
+                </div>
+              </div>
+              <div class="reader-date-info">
+                <time id="readerDateRelative" class="date-relative">Vor wenigen Sekunden</time>
+                <span id="readerDateExact" class="date-exact">19. Okt 2026, 14:00</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Attachments Drawer (if any) -->
+          <div class="attachments-drawer hidden" id="attachmentsDrawer">
+            <div class="attachments-drawer-header">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="drawer-icon">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+              </svg>
+              <span>Anhänge (<span id="attachmentsCount">0</span>)</span>
+            </div>
+            <div class="attachments-chips" id="attachmentsChips"></div>
+          </div>
+
+          <!-- Content Viewer Mode Tabs -->
+          <div class="view-mode-tabs">
+            <button class="view-tab active" data-view="html" id="tabViewHtml">HTML-Ansicht</button>
+            <button class="view-tab" data-view="text" id="tabViewText">Reiner Text</button>
+          </div>
+
+          <!-- Safe Email Body Wrapper -->
+          <div class="email-body-wrapper">
+            <iframe id="emailBodyIframe" class="email-iframe" sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox" title="E-Mail Inhalt"></iframe>
+            <pre id="emailBodyPlainText" class="email-plain-text hidden"></pre>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <!-- Modals -->
+
+  <!-- Modal: Custom Address Creation -->
+  <div class="modal-overlay hidden" id="customAddressModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Eigene Wunsch-Adresse</h3>
+        <button class="modal-close-btn" id="closeCustomModalBtn">&times;</button>
+      </div>
+      <form id="customAddressForm" class="modal-body">
+        <p class="modal-hint">Wähle deinen Wunschnamen</p>
+
+        <div class="form-group">
+          <label for="customUsername">Benutzername</label>
+          <div class="input-with-addon">
+            <input type="text" id="customUsername" class="form-input" placeholder="z.B. max.mustermann" required autocomplete="off" autofocus>
+            <span class="input-addon">@</span>
+            <select id="customDomainSelect" class="form-select" aria-label="Domain auswählen"></select>
+          </div>
+          <span class="field-hint">Erlaubt: Buchstaben und Zahlen</span>
+        </div>
+
+        <div class="form-group">
+          <label for="customPassword">Passwort (Optional)</label>
+          <input type="password" id="customPassword" class="form-input" placeholder="Mindestens 8 Zeichen (sonst Zufall)">
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" id="cancelCustomBtn">Abbrechen</button>
+          <button type="submit" class="btn btn-primary" id="submitCustomBtn">Erstellen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Account History -->
+  <div class="modal-overlay hidden" id="historyModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Frühere Adressen</h3>
+        <button class="modal-close-btn" id="closeHistoryModalBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-hint">Klicke auf eine frühere Adresse, um deren Postfach wieder zu öffnen:</p>
+        <div class="history-list" id="historyList"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="closeHistoryBtn">Schließen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Raw RFC822 Source & Headers -->
+  <div class="modal-overlay hidden" id="rawSourceModal">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <h3 class="modal-title">E-Mail-Quelltext & Header</h3>
+        <button class="modal-close-btn" id="closeRawModalBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <pre class="raw-code-box" id="rawSourceCode">Lade Quelltext...</pre>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="copyRawBtn">Kopieren</button>
+        <button class="btn btn-primary" id="closeRawBtn">Schließen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Hub -->
+  <div class="toast-hub" id="toastHub" aria-live="polite"></div>
+
+  <!-- JavaScript Modules -->
+  <script src="js/sound.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
